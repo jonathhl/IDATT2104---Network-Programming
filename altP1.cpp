@@ -1,10 +1,11 @@
+#include <algorithm>
+#include <execution>
 #include <iostream>
 #include <vector>
 #include <bits/stdc++.h>
 
 using namespace std;
 vector<int> result;
-vector<thread> threads;
 
 bool primeCalc(int num) {
     if(num<=1) return false;
@@ -15,20 +16,17 @@ bool primeCalc(int num) {
     return true;
 }
 
-// TODO: fix threading, threads each does the interval throughout once. Not optimal.
 void threadWork(int start, int end) {
-    for (int thread_number = 0; thread_number < 2; thread_number++) {
-        threads.emplace_back([thread_number, &start, &end]{
-            for (int i = start; i <= end; i++) {
-                if(primeCalc(i))
-                    result.emplace_back(i);
-            }
-        });
+    vector<int> list;
+    for (int i = start; i <= end; ++i) {
+        list.emplace_back(i);
     }
 
-    for(auto &t : threads) {
-        t.join();
-    }
+    transform(execution::par, list.begin(), list.end(), [](int num) {
+        if(primeCalc(num)) {
+            return result.emplace_back(primeCalc(num));
+        }
+    });
 }
 
 void print(vector<int> const &input) {
@@ -41,9 +39,9 @@ int main() {
     int start;
     int end;
 
-    cout << "Select start of interval:";
+    cout << "Select start of interval: ";
     cin >> start;
-    cout << "Select end of interval:";
+    cout << "Select end of interval: ";
     cin >> end;
 
     threadWork(start, end);
