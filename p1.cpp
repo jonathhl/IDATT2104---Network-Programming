@@ -3,8 +3,6 @@
 #include <bits/stdc++.h>
 
 using namespace std;
-vector<int> result;
-vector<thread> threads;
 
 bool primeCalc(int num) {
     if(num <= 1) return false;
@@ -21,36 +19,11 @@ bool primeCalc(int num) {
     return true;
 }
 
-// TODO: fix threading, threads each does the interval throughout once. Not optimal.
-void threadWork(int start, int end) {
 
-    for (int thread_number = 0; thread_number < 5; thread_number++) {
-        threads.emplace_back([&thread_number, &start, &end]{
-            for (int i = start; i <= end; i++) {
-                if(primeCalc(i))
-                    result.emplace_back(i);
-            }
-        });
-    }
-
-    /*
-    for (int i = 0; i < 5; ++i) {
-        threads.emplace_back([&i, &temp] {
-           bool task_done = false;
-           int nr = i;
-           while(!task_done) {
-               for (int j = temp.size(); j >= temp.size()/5; --j) {
-                   if(primeCalc(j)) {
-                       result.emplace_back(j);
-                   }
-               }
-           }
-        });
-    }
-     */
-
-    for(auto &t : threads) {
-        t.join();
+void threadWork(int start, int end, vector<int> *vectorArray) {
+    for (int i = start; i <= end; ++i) {
+        if(primeCalc(i))
+            vectorArray->emplace_back(i);
     }
 }
 
@@ -63,20 +36,30 @@ void print(vector<int> const &input) {
 int main() {
     int start;
     int end;
-    vector<int> temp;
+    int n;
+    vector<thread> threads;
 
     cout << "Start of interval:";
     cin >> start;
     cout << "End of interval:";
     cin >> end;
+    cout << "Number of threads:";
+    cin >> n;
 
-    /*
-    for (int i = start; i <= end; ++i) {
-        temp.emplace_back(i);
+    vector<int> vectorArray[n];
+    int smallInterval = ((end)-start)/n;
+
+    threads.reserve(n);
+    for (int i = 0; i < n; ++i) {
+
+        threads.emplace_back(threadWork, start + (smallInterval * i), start + (smallInterval*(i + 1)), &vectorArray[i]);
     }
-     */
 
-    threadWork(start, end);
+    for(auto &t : threads) {
+        t.join();
+    }
 
-    print(result);
+    for (int i = 0; i < n; ++i) {
+        print(vectorArray[i]);
+    }
 }
