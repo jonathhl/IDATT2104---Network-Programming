@@ -6,4 +6,4 @@ set(CMAKE_CXX_STANDARD 14)
 include_directories(.)
 
 add_executable(IDATT2104___Network_Programming
-        p1.cpp)
+        p2d/p2.cpp)

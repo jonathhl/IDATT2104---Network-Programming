@@ -51,7 +51,6 @@ int main() {
 
     threads.reserve(n);
     for (int i = 0; i < n; ++i) {
-
         threads.emplace_back(threadWork, start + (smallInterval * i), start + (smallInterval*(i + 1)), &vectorArray[i]);
     }
 
