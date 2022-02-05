@@ -17,7 +17,6 @@ private:
     mutex tasks_mutex;
     int numThreads;
     bool run = true;
-    bool waiting;
     condition_variable cv;
 
 public:
@@ -25,26 +24,33 @@ public:
         this->numThreads = numThreads;
     }
 
+     // Creating and starting threads.
     void start() {
+
+        if(!run) {
+            // Worker pool is already started.
+            return;
+        }
+
         for (int i = 0; i < numThreads; i++) {
-            worker_threads.emplace_back([this] {
+            worker_threads.emplace_back([i, this] {
                 while(run) {
                     function<void()> task;
                     {
                         unique_lock<mutex> lock(tasks_mutex);
-                        while(waiting) {
+                        while(tasks.empty()) {
+                            cout << to_string(i) << ": No tasks to work on.\n";
+                            cout << to_string(i) << ": Going to sleep.\n";
                             cv.wait(lock);
+                            cout << to_string(i) << ": Got woken up.\n";
                         }
-                        waiting = true;
                         if(!tasks.empty()) {
                             task = *tasks.begin();
                             tasks.pop_front();
                         }
-                        lock.unlock();
-                        waiting = false;
-                        cv.notify_one();
                     }
                     if(task) {
+                        cout << to_string(i) << ": Running task.\n";
                         task();
                     }
                 }
@@ -53,24 +59,24 @@ public:
         cv.notify_one();
     }
 
+    // Placing function in queue and is ready to be worked on.
     void post(const function<void()>& function) {
         unique_lock<mutex> lock(tasks_mutex);
         tasks.emplace_back(function);
-        lock.unlock();
-        waiting = false;
-        cv.notify_one();
+           cv.notify_one();
     }
 
+    // Makes the function wait for a specified time.
     void post_timeout(const function<void()>& function, int t) {
-        this_thread::sleep_for(milliseconds (t));
-        unique_lock<mutex> lock(tasks_mutex);
-        tasks.emplace_back(function);
-        waiting = false;
-        cv.notify_one();
+        post([&function, t] {
+            this_thread::sleep_for(milliseconds (t));
+            function();
+        });
     }
 
     void stop() {
         run = false;
+        cv.notify_all();
         for(auto &thread: worker_threads)
             thread.join();
     }
@@ -84,36 +90,23 @@ int main() {
     eventLoop.start();
 
     workerThreads.post([] {
-        cout << "task " << 1
-            << " runs in thread "
-            << this_thread::get_id()
-            << endl;
+        cout << "Function 1 running.\n";
     });
 
     workerThreads.post([] {
-       cout << "task " << 2
-            << " runs in thread "
-            << this_thread::get_id()
-            << endl;
+       cout << "Function 2 running.\n";
     });
 
     eventLoop.post([] {
-       cout << " task " << 3
-            << " runs in thread "
-            << this_thread::get_id()
-            << endl;
+       cout << "Function 3 running.\n";
     });
 
     eventLoop.post([] {
-        cout << " task " << 4
-             << " runs in thread "
-             << this_thread::get_id()
-             << endl;
+        cout << "Function 4 running.\n";
     });
 
     workerThreads.post_timeout([] {
-        cout << " timed task, running in thread: "
-             << this_thread::get_id() << endl;
+        cout << "Function running with timeout delay.\n";
     }, 2000);
 
     workerThreads.stop();
