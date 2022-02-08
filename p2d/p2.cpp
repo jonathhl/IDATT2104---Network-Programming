@@ -39,10 +39,10 @@ public:
                     {
                         unique_lock<mutex> lock(tasks_mutex);
                         while(tasks.empty()) {
-                            cout << to_string(i) << ": No tasks to work on.\n";
-                            cout << to_string(i) << ": Going to sleep.\n";
+                            cout << to_string(i+1) << ": No tasks to work on.\n";
+                            cout << to_string(i+1) << ": Going to sleep.\n";
                             cv.wait(lock);
-                            cout << to_string(i) << ": Got woken up.\n";
+                            cout << to_string(i+1) << ": Got woken up.\n";
                         }
                         if(!tasks.empty()) {
                             task = *tasks.begin();
@@ -50,7 +50,7 @@ public:
                         }
                     }
                     if(task) {
-                        cout << to_string(i) << ": Running task.\n";
+                        cout << to_string(i+1) << ": Running task.\n";
                         task();
                     }
                 }
@@ -106,7 +106,7 @@ int main() {
     });
 
     workerThreads.post_timeout([] {
-        cout << "Function running with timeout delay.\n";
+        cout << "Function 5 running with timeout delay.\n";
     }, 2000);
 
     workerThreads.stop();
