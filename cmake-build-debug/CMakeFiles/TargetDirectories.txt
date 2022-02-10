@@ -1,0 +1,3 @@
+C:/Users/Jonat/Desktop/Nettverksprog/IDATT2104---Network-Programming/cmake-build-debug/CMakeFiles/IDATT2104___Network_Programming.dir
+C:/Users/Jonat/Desktop/Nettverksprog/IDATT2104---Network-Programming/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Jonat/Desktop/Nettverksprog/IDATT2104---Network-Programming/cmake-build-debug/CMakeFiles/rebuild_cache.dir
