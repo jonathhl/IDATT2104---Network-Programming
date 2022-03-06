@@ -56,6 +56,13 @@ build CMakeFiles/IDATT2104___Network_Programming.dir/p2d/p2.cpp.obj: CXX_COMPILE
   OBJECT_DIR = CMakeFiles\IDATT2104___Network_Programming.dir
   OBJECT_FILE_DIR = CMakeFiles\IDATT2104___Network_Programming.dir\p2d
 
+build CMakeFiles/IDATT2104___Network_Programming.dir/p5d/Compiler.cpp.obj: CXX_COMPILER__IDATT2104___Network_Programming_Debug C$:/Users/Jonat/Desktop/Nettverksprog/IDATT2104---Network-Programming/p5d/Compiler.cpp || cmake_object_order_depends_target_IDATT2104___Network_Programming
+  DEP_FILE = CMakeFiles\IDATT2104___Network_Programming.dir\p5d\Compiler.cpp.obj.d
+  FLAGS = -g -std=gnu++14
+  INCLUDES = -IC:/Users/Jonat/Desktop/Nettverksprog/IDATT2104---Network-Programming/.
+  OBJECT_DIR = CMakeFiles\IDATT2104___Network_Programming.dir
+  OBJECT_FILE_DIR = CMakeFiles\IDATT2104___Network_Programming.dir\p5d
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target IDATT2104___Network_Programming
@@ -64,7 +71,7 @@ build CMakeFiles/IDATT2104___Network_Programming.dir/p2d/p2.cpp.obj: CXX_COMPILE
 #############################################
 # Link the executable IDATT2104___Network_Programming.exe
 
-build IDATT2104___Network_Programming.exe: CXX_EXECUTABLE_LINKER__IDATT2104___Network_Programming_Debug CMakeFiles/IDATT2104___Network_Programming.dir/p2d/p2.cpp.obj
+build IDATT2104___Network_Programming.exe: CXX_EXECUTABLE_LINKER__IDATT2104___Network_Programming_Debug CMakeFiles/IDATT2104___Network_Programming.dir/p2d/p2.cpp.obj CMakeFiles/IDATT2104___Network_Programming.dir/p5d/Compiler.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\IDATT2104___Network_Programming.dir
