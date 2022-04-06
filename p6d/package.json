@@ -1,0 +1,14 @@
+{
+  "name": "p6d",
+  "version": "1.0.0",
+  "description": "p6d",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Hello\""
+  },
+  "author": "jonathhl",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^17.0.21"
+  }
+}
